@@ -1,5 +1,6 @@
 import CellularAutomata.CellularMatrix;
-import org.lwjgl.*;
+import CellularAutomata.Sand;
+import Util.Color;
 import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.*;
 import org.lwjgl.system.*;
@@ -18,8 +19,16 @@ public class Main {
     private long window;
 
     private CellularMatrix cellularMatrix;
+
     private double mouseX;
     private double mouseY;
+
+    double lastX = mouseX;
+    double lastY = mouseY;
+
+    public final static int WIDTH = 800;
+    public final static int HEIGHT = 800;
+
     static void main(String[] args) {
         new Main().run();
     }
@@ -48,19 +57,24 @@ public class Main {
         // Configure GLFW
         glfwDefaultWindowHints(); // optional, the current window hints are already the default
         glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE); // the window will stay hidden after creation
-        glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE); // the window will be resizable
+        glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE); // the window will not be resizable
 
         // Create the window
-        window = glfwCreateWindow(300, 300, "Hello World!", NULL, NULL);
+        window = glfwCreateWindow(WIDTH, HEIGHT, "SandSimulator", NULL, NULL);
         if ( window == NULL )
             throw new RuntimeException("Failed to create the GLFW window");
+
+        glfwMakeContextCurrent(window);
+
+        GL.createCapabilities();
+
+        glfwSetFramebufferSizeCallback(window, this::resize);
 
         // Setup a key callback. It will be called every time a key is pressed, repeated or released.
         glfwSetKeyCallback(window, (window, key, scancode, action, mods) -> {
             if ( key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE )
                 glfwSetWindowShouldClose(window, true); // We will detect this in the rendering loop
         });
-
         // Get the thread stack and push a new frame
         try ( MemoryStack stack = stackPush() ) {
             IntBuffer pWidth = stack.mallocInt(1); // int*
@@ -68,7 +82,7 @@ public class Main {
 
             // Get the window size passed to glfwCreateWindow
             glfwGetWindowSize(window, pWidth, pHeight);
-
+            resize(window, pWidth.get(0), pHeight.get(0));
             // Get the resolution of the primary monitor
             GLFWVidMode vidmode = glfwGetVideoMode(glfwGetPrimaryMonitor());
 
@@ -86,9 +100,6 @@ public class Main {
 
         } // the stack frame is popped automatically
 
-        // Make the OpenGL context current
-        glfwMakeContextCurrent(window);
-
         cellularMatrix = new CellularMatrix();
 
         // Enable v-sync
@@ -97,16 +108,23 @@ public class Main {
         // Make the window visible
         glfwShowWindow(window);
 
-
+        // Switch back to ModelView matrix to draw shapes
+        glMatrixMode(GL_MODELVIEW);
     }
 
+    private void resize(long window, int width, int height) {
+        // 1. Viewport uses ACTUAL PIXELS (width/height passed by callback)
+        glViewport(0, 0, width, height);
+
+        glMatrixMode(GL_PROJECTION);
+        glLoadIdentity();
+
+        glOrtho(0.0, WIDTH, HEIGHT, 0.0, 1.0, -1.0);
+
+        glMatrixMode(GL_MODELVIEW);
+    }
     private void loop() {
-        // This line is critical for LWJGL's interoperation with GLFW's
-        // OpenGL context, or any context that is managed externally.
-        // LWJGL detects the context that is current in the current thread,
-        // creates the GLCapabilities instance and makes the OpenGL
-        // bindings available for use.
-        GL.createCapabilities();
+
 
         // Set the clear color
         glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
@@ -116,12 +134,31 @@ public class Main {
         while ( !glfwWindowShouldClose(window) ) {
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
 
-            glfwSwapBuffers(window); // swap the color buffers
 
-            if(glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_1) == GLFW_PRESS){
-                System.out.println(mouseX +", "+mouseY);
+            if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_1) == GLFW_PRESS) {
+                double dx = mouseX - lastX;
+                double dy = mouseY - lastY;
+                double distance = Math.hypot(dx, dy); // Calculates the diagonal distance
+                double steps = Math.max(1, distance / CellularMatrix.CELLSIZE);
+
+                for (double i = 0; i <= steps; i++) {
+                    double t = i / steps;
+
+                    double currentX = lastX + (dx * t);
+                    double currentY = lastY + (dy * t);
+                    cellularMatrix.setCell(currentX, currentY);
+
+                }
+                lastX = mouseX;
+                lastY = mouseY;
+            } else {
+                lastX = mouseX;
+                lastY = mouseY;
             }
 
+            cellularMatrix.draw();
+
+            glfwSwapBuffers(window); // swap the color buffers
 
             // Poll for window events. The key callback above will only be
             // invoked during this call.
