@@ -1,0 +1,42 @@
+plugins {
+    id 'java'
+}
+
+group 'org.example'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+project.ext.lwjgl_version = "3.3.3"
+project.ext.joml_version = "1.10.5"
+
+switch (org.gradle.internal.os.OperatingSystem.current()) {
+    case org.gradle.internal.os.OperatingSystem.LINUX:
+        def osArch = System.getProperty("os.arch")
+        project.ext.lwjgl_natives = osArch.startsWith("arm") || osArch.startsWith("aarch64")
+                ? "natives-linux-arm64" : "natives-linux"
+        break
+    case org.gradle.internal.os.OperatingSystem.MAC_OS:
+        project.ext.lwjgl_natives = System.getProperty("os.arch").startsWith("aarch64") ? "natives-macos-arm64" : "natives-macos"
+        break
+    case org.gradle.internal.os.OperatingSystem.WINDOWS:
+        project.ext.lwjgl_natives = "natives-windows"
+        break
+}
+
+dependencies {
+    implementation platform("org.lwjgl:lwjgl-bom:$lwjgl_version")
+
+    implementation "org.lwjgl:lwjgl"
+    implementation "org.lwjgl:lwjgl-glfw"
+    implementation "org.lwjgl:lwjgl-opengl"
+    implementation "org.lwjgl:lwjgl-stb"
+    implementation "org.joml:joml:$joml_version"
+
+    runtimeOnly "org.lwjgl:lwjgl::$lwjgl_natives"
+    runtimeOnly "org.lwjgl:lwjgl-glfw::$lwjgl_natives"
+    runtimeOnly "org.lwjgl:lwjgl-opengl::$lwjgl_natives"
+    runtimeOnly "org.lwjgl:lwjgl-stb::$lwjgl_natives"
+}
