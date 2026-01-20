@@ -132,25 +132,21 @@ public class Main {
         while ( !glfwWindowShouldClose(window) ) {
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
 
-
             if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_1) == GLFW_PRESS) {
                 double dx = mouseX - lastX;
                 double dy = mouseY - lastY;
                 double distance = Math.hypot(dx, dy); // Calculates the diagonal distance
                 double steps = Math.max(1, distance / CellularMatrix.CELLSIZE);
-
                 for (double i = 0; i <= steps; i++) {
                     double t = i / steps;
-
                     double currentX = lastX + (dx * t);
                     double currentY = lastY + (dy * t);
                     cellularMatrix.setCell(currentX, currentY);
-
                 }
             }
             lastX = mouseX;
             lastY = mouseY;
-
+            cellularMatrix.stepAll();
             cellularMatrix.draw();
 
             glfwSwapBuffers(window); // swap the color buffers

@@ -19,4 +19,11 @@ public abstract class Cell {
         glVertex2d(x, y + size);       // Top-Left
         glEnd();
     }
+
+    public void step(Cell[][] matrix, int x, int y) {
+    }
+
+    protected boolean checkInsideBonds(Cell[][] matrix, int x, int y){
+        return x < matrix.length && y < matrix[0].length && x >= 0 && y >= 0;
+    }
 }

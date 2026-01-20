@@ -33,4 +33,13 @@ public class CellularMatrix {
         int posY = (int) Math.floor(y/CELLSIZE);
         matrix[posX][posY] = new Sand();
     }
+
+    public void stepAll(){
+        for(int i = matrix.length-1;i>=0;i--){
+            for(int j = matrix[0].length-1;j>=0;j--){
+                if( matrix[i][j] != null)
+                   matrix[i][j].step(matrix, i, j);
+            }
+        }
+    }
 }
