@@ -2,7 +2,7 @@ package CellularAutomata;
 
 public class CellularMatrix {
 
-    private Cell[][] matrix;
+    private final Cell[][] matrix;
 
     public final static int WIDTH = 800;
     public final static int HEIGHT = 800;
@@ -10,10 +10,6 @@ public class CellularMatrix {
 
     public CellularMatrix(){
         matrix = new Cell[HEIGHT/ CELLSIZE][WIDTH/ CELLSIZE];
-    }
-
-    public Cell[][] getMatrix() {
-        return matrix;
     }
 
     public void draw(){

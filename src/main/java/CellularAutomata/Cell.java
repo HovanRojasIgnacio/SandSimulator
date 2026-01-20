@@ -9,10 +9,6 @@ public abstract class Cell {
     Color color = new Color(1,0,0);
 
 
-    public Color getColor(){
-        return this.color;
-    }
-
     public void paint(double x, double y, int size) {
         glColor3f(color.r, color.g, color.b);
 

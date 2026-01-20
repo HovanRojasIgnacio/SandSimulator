@@ -1,6 +1,4 @@
 import CellularAutomata.CellularMatrix;
-import CellularAutomata.Sand;
-import Util.Color;
 import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.*;
 import org.lwjgl.system.*;
@@ -29,7 +27,7 @@ public class Main {
     public final static int WIDTH = 800;
     public final static int HEIGHT = 800;
 
-    static void main(String[] args) {
+    static void main() {
         new Main().run();
     }
 
@@ -46,7 +44,7 @@ public class Main {
     }
 
     private void init() {
-        // Setup an error callback. The default implementation
+        // Set up an error callback. The default implementation
         // will print the error message in System.err.
         GLFWErrorCallback.createPrint(System.err).set();
 
@@ -70,8 +68,8 @@ public class Main {
 
         glfwSetFramebufferSizeCallback(window, this::resize);
 
-        // Setup a key callback. It will be called every time a key is pressed, repeated or released.
-        glfwSetKeyCallback(window, (window, key, scancode, action, mods) -> {
+        // Set up a key callback. It will be called every time a key is pressed, repeated or released.
+        glfwSetKeyCallback(window, (window, key, _, action, _) -> {
             if ( key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE )
                 glfwSetWindowShouldClose(window, true); // We will detect this in the rendering loop
         });
@@ -89,11 +87,11 @@ public class Main {
             // Center the window
             glfwSetWindowPos(
                     window,
-                    (vidmode.width() - pWidth.get(0)) / 2,
-                    (vidmode.height() - pHeight.get(0)) / 2
+                    ((vidmode != null ? vidmode.width() : 0) - pWidth.get(0)) / 2,
+                    ((vidmode != null ? vidmode.height() : 0) - pHeight.get(0)) / 2
             );
 
-            glfwSetCursorPosCallback(window, (window, xpos, ypos) -> {
+            glfwSetCursorPosCallback(window, (_, xpos, ypos) -> {
                 this.mouseX = xpos;
                 this.mouseY = ypos;
             });
@@ -149,12 +147,9 @@ public class Main {
                     cellularMatrix.setCell(currentX, currentY);
 
                 }
-                lastX = mouseX;
-                lastY = mouseY;
-            } else {
-                lastX = mouseX;
-                lastY = mouseY;
             }
+            lastX = mouseX;
+            lastY = mouseY;
 
             cellularMatrix.draw();
 
