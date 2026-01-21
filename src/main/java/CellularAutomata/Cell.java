@@ -12,4 +12,6 @@ public interface Cell {
     double getDensity();
 
     double getInertia();
+
+    boolean isSolid();
 }

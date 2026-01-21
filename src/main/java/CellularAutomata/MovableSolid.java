@@ -4,7 +4,7 @@ import java.util.Random;
 
 public abstract class MovableSolid extends Element{
 
-    int movementChance = 3;
+    int movementChance = 2;
 
     Random rand = new Random();
 
@@ -13,23 +13,33 @@ public abstract class MovableSolid extends Element{
 
     @Override
     public void step(Cell[][] matrix, int x, int y) {
-        if(checkInsideBonds(matrix,x,y)) {
-            if (y+1<matrix[0].length) {
-                if(matrix[x][y].isMoreDenseThan(matrix[x][y+1])){
-                    CellularMatrix.swap(x,x,y,y+1);
-                    movementChance=3;
-                }else if(x+1< matrix.length &&  matrix[x][y].isMoreDenseThan(matrix[x+1][y+1])){
-                    if(rand.nextFloat()>=matrix[x][y].getInertia() && movementChance>0){
-                        CellularMatrix.swap(x,x+1,y,y+1);
+        if (checkInsideBonds(matrix, x, y)) {
+            if (y + 1 < matrix[0].length) {
+                if (matrix[x][y].isMoreDenseThan(matrix[x][y + 1]) && !matrix[x][y + 1].isSolid()) {
+                    CellularMatrix.swap(x, x, y, y + 1);
+                    movementChance = 2;
+                    return;
+                }
+                boolean checkRightFirst = rand.nextBoolean();
+                for (int i = 0; i < 2; i++) {
+                    int dir = ((i == 0) == checkRightFirst) ? 1 : -1;
+                    int targetX = x + dir;
+                    if (targetX >= 0 && targetX < matrix.length) {
+                        if (matrix[x][y].isMoreDenseThan(matrix[targetX][y + 1])
+                                && !matrix[targetX][y + 1].isSolid()) {
+                            if (rand.nextFloat() >= matrix[x][y].getInertia() && movementChance > 0) {
+                                CellularMatrix.swap(x, targetX, y, y + 1);
+                            }
+                            movementChance--;
+                            break;
+                        }
                     }
-                    movementChance--;
-                }else if(x-1>=0 && matrix[x][y].isMoreDenseThan(matrix[x-1][y+1])){
-                    if(rand.nextFloat()>=matrix[x][y].getInertia() && movementChance>0){
-                        CellularMatrix.swap(x,x-1,y,y+1);
-                    }
-                    movementChance--;
                 }
             }
         }
+    }
+    @Override
+    public boolean isSolid(){
+        return true;
     }
 }

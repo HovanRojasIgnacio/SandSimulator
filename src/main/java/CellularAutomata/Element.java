@@ -33,15 +33,15 @@ public abstract class Element implements Cell {
         return x < matrix.length && y < matrix[0].length && x >= 0 && y >= 0;
     }
 
-    @Override
     public boolean isMoreDenseThan(Cell element1){
         return this.density > element1.getDensity();
     }
 
-    @Override
     public double getDensity(){
         return density;
     }
 
-
+    public boolean isSolid(){
+        return false;
+    }
 }

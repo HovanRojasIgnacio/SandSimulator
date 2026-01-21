@@ -40,8 +40,8 @@ public class CellularMatrix {
     }
 
     public void stepAll(){
-        for(int i = matrix.length-1;i>=0;i--){
-            for(int j = matrix[0].length-1;j>=0;j--){
+        for(int i = matrix[0].length-1;i>=0;i--){
+            for(int j = matrix.length-1;j>=0;j--){
                 if( matrix[i][j] != null)
                    matrix[i][j].step(matrix, i, j);
             }

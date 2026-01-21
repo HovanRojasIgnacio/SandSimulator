@@ -1,7 +1,4 @@
-import CellularAutomata.Air;
-import CellularAutomata.Cell;
-import CellularAutomata.CellularMatrix;
-import CellularAutomata.Sand;
+import CellularAutomata.*;
 import Util.Util;
 import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.*;
@@ -178,6 +175,9 @@ public class Main {
             case GLFW_KEY_2 ->
             {
                 return new Air();
+            }
+            case GLFW_KEY_3 ->{
+                return new Water();
             }
             default ->
             {
