@@ -2,14 +2,19 @@ package CellularAutomata;
 
 public class CellularMatrix {
 
-    private final Cell[][] matrix;
 
     public final static int WIDTH = 800;
     public final static int HEIGHT = 800;
     public final static int CELLSIZE = 4;
+    private static final Cell[][] matrix = new Element[HEIGHT/ CELLSIZE][WIDTH/ CELLSIZE];
+
 
     public CellularMatrix(){
-        matrix = new Cell[HEIGHT/ CELLSIZE][WIDTH/ CELLSIZE];
+        for (int x = 0; x < matrix.length; x++) {
+            for (int y = 0; y < matrix[x].length; y++) {
+                matrix[x][y]= new Air();
+            }
+        }
     }
 
     public void draw(){
@@ -41,5 +46,11 @@ public class CellularMatrix {
                    matrix[i][j].step(matrix, i, j);
             }
         }
+    }
+
+    public static void swap(int xFirst, int xSecond, int yFirst, int ySecond){
+        Cell temporary = matrix[xFirst][yFirst];
+        matrix[xFirst][yFirst] = matrix[xSecond][ySecond];
+        matrix[xSecond][ySecond]=temporary;
     }
 }
