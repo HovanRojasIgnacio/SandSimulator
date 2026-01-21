@@ -9,7 +9,11 @@ public abstract class Element implements Cell {
     Color color = new Color(0,0,0);
 
     double density = 0;
+    double inertia = 0;
 
+    public double getInertia() {
+        return inertia;
+    }
 
     public void paint(double x, double y, int size) {
         glColor3f(color.r, color.g, color.b);

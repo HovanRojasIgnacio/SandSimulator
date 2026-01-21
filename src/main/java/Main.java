@@ -1,4 +1,8 @@
+import CellularAutomata.Air;
+import CellularAutomata.Cell;
 import CellularAutomata.CellularMatrix;
+import CellularAutomata.Sand;
+import Util.Util;
 import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.*;
 import org.lwjgl.system.*;
@@ -16,6 +20,9 @@ public class Main {
 
     private long window;
 
+    private int lastKeyPressed = -1;
+
+    private final static Util util = Util.getInstance();
     private CellularMatrix cellularMatrix;
 
     private double mouseX;
@@ -70,8 +77,12 @@ public class Main {
 
         // Set up a key callback. It will be called every time a key is pressed, repeated or released.
         glfwSetKeyCallback(window, (window, key, _, action, _) -> {
-            if ( key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE )
+            if ( key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE ) {
                 glfwSetWindowShouldClose(window, true); // We will detect this in the rendering loop
+            }
+            if (action == GLFW_PRESS && key >= GLFW_KEY_0 && key <= GLFW_KEY_9) {
+                lastKeyPressed = key;
+            }
         });
         // Get the thread stack and push a new frame
         try ( MemoryStack stack = stackPush() ) {
@@ -121,6 +132,7 @@ public class Main {
 
         glMatrixMode(GL_MODELVIEW);
     }
+
     private void loop() {
 
 
@@ -141,7 +153,8 @@ public class Main {
                     double t = i / steps;
                     double currentX = lastX + (dx * t);
                     double currentY = lastY + (dy * t);
-                    cellularMatrix.setCell(currentX, currentY);
+                    System.out.println(lastKeyPressed);
+                    cellularMatrix.setCell(currentX, currentY, getPaintBrush());
                 }
             }
             lastX = mouseX;
@@ -154,6 +167,23 @@ public class Main {
             // Poll for window events. The key callback above will only be
             // invoked during this call.
             glfwPollEvents();
+        }
+    }
+
+    private Cell getPaintBrush(){
+        switch (lastKeyPressed){
+            case GLFW_KEY_1 -> {
+                return new Sand();
+            }
+            case GLFW_KEY_2 ->
+            {
+                return new Air();
+            }
+            default ->
+            {
+                return new Sand();
+            }
+
         }
     }
 

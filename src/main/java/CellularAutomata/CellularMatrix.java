@@ -30,13 +30,13 @@ public class CellularMatrix {
         }
     }
 
-    public void setCell(double x, double y){
+    public void setCell(double x, double y, Cell cell){
         if(x<0 || y<0 || x>=WIDTH || y>=HEIGHT){
             return;
         }
         int posX = (int) Math.floor(x/CELLSIZE);
         int posY = (int) Math.floor(y/CELLSIZE);
-        matrix[posX][posY] = new Sand();
+        matrix[posX][posY] = cell;
     }
 
     public void stepAll(){

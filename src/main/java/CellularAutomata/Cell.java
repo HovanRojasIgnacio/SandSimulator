@@ -10,4 +10,6 @@ public interface Cell {
     boolean isMoreDenseThan(Cell element);
 
     double getDensity();
+
+    double getInertia();
 }

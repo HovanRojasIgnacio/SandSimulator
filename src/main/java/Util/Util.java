@@ -15,7 +15,4 @@ public class Util{
 
     private Util(){}
 
-    public void calculateLine(double startX, double startY, double endX, double endY){
-        double slope = (endY-startY)/(endX-startX);
-    }
 }
