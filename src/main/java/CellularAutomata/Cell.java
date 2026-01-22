@@ -14,4 +14,12 @@ public interface Cell {
     double getInertia();
 
     boolean isSolid();
+
+    boolean isLiquid();
+
+    boolean isGas();
+
+    boolean hasMoved();
+
+    void reset();
 }

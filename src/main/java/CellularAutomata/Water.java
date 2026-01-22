@@ -4,7 +4,6 @@ import Util.Color;
 
 public class Water extends Liquid {
 
-
     public Water(){
         super();
         float base = 0.8f + (rand.nextFloat() * 0.2f);

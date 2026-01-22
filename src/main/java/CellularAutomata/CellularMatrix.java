@@ -42,15 +42,25 @@ public class CellularMatrix {
     public void stepAll(){
         for(int i = matrix[0].length-1;i>=0;i--){
             for(int j = matrix.length-1;j>=0;j--){
-                if( matrix[i][j] != null)
+                if( matrix[i][j] != null && !matrix[i][j].hasMoved())
                    matrix[i][j].step(matrix, i, j);
             }
         }
+        reset();
     }
 
     public static void swap(int xFirst, int xSecond, int yFirst, int ySecond){
         Cell temporary = matrix[xFirst][yFirst];
         matrix[xFirst][yFirst] = matrix[xSecond][ySecond];
         matrix[xSecond][ySecond]=temporary;
+    }
+
+    private void reset(){
+        for(int i = matrix[0].length-1;i>=0;i--){
+            for(int j = matrix.length-1;j>=0;j--){
+                if( matrix[i][j] != null)
+                     matrix[i][j].reset();
+            }
+        }
     }
 }

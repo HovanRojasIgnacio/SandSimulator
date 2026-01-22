@@ -2,7 +2,7 @@ package CellularAutomata;
 
 import Util.Color;
 
-public class Air extends Element {
+public class Air extends Gas {
 
     public Air(){
         color = new Color(0,0,0);
@@ -10,4 +10,8 @@ public class Air extends Element {
     }
 
 
+    @Override
+    protected void oneFrameStep(Cell[][] matrix, int x, int y) {
+        return;
+    }
 }

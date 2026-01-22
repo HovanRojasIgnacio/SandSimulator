@@ -169,9 +169,6 @@ public class Main {
 
     private Cell getPaintBrush(){
         switch (lastKeyPressed){
-            case GLFW_KEY_1 -> {
-                return new Sand();
-            }
             case GLFW_KEY_2 ->
             {
                 return new Air();

@@ -6,13 +6,11 @@ public abstract class MovableSolid extends Element{
 
     int movementChance = 2;
 
-    Random rand = new Random();
-
     public MovableSolid(){
     }
 
     @Override
-    public void step(Cell[][] matrix, int x, int y) {
+    protected void oneFrameStep(Cell[][] matrix, int x, int y) {
         if (checkInsideBonds(matrix, x, y)) {
             if (y + 1 < matrix[0].length) {
                 if (matrix[x][y].isMoreDenseThan(matrix[x][y + 1]) && !matrix[x][y + 1].isSolid()) {
