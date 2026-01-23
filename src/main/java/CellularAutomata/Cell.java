@@ -22,4 +22,10 @@ public interface Cell {
     boolean hasMoved();
 
     void reset();
+
+    boolean isFreeFalling();
+
+    void setFreeFalling(boolean freeFalling);
+
 }
+

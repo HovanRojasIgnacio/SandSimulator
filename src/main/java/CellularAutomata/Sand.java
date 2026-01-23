@@ -11,7 +11,7 @@ public class Sand extends MovableSolid {
         float redNoise = rand.nextFloat() * 0.1f;
         color = new Color(base, base - 0.1f, redNoise);
         density = 2;
-        inertia = 0.33;
+        inertia = .2;
     }
 
 

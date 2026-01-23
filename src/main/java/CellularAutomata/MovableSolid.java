@@ -1,43 +1,53 @@
 package CellularAutomata;
 
-import java.util.Random;
+public abstract class MovableSolid extends Element {
 
-public abstract class MovableSolid extends Element{
+    public MovableSolid() {
+        super();
+    }
 
-    int movementChance = 2;
-
-    public MovableSolid(){
+    @Override
+    public boolean isSolid() {
+        return true;
     }
 
     @Override
     protected void oneFrameStep(Cell[][] matrix, int x, int y) {
-        if (checkInsideBonds(matrix, x, y)) {
-            if (y + 1 < matrix[0].length) {
-                if (matrix[x][y].isMoreDenseThan(matrix[x][y + 1]) && !matrix[x][y + 1].isSolid()) {
-                    CellularMatrix.swap(x, x, y, y + 1);
-                    movementChance = 2;
-                    return;
-                }
-                boolean checkRightFirst = rand.nextBoolean();
-                for (int i = 0; i < 2; i++) {
-                    int dir = ((i == 0) == checkRightFirst) ? 1 : -1;
-                    int targetX = x + dir;
-                    if (targetX >= 0 && targetX < matrix.length) {
-                        if (matrix[x][y].isMoreDenseThan(matrix[targetX][y + 1])
-                                && !matrix[targetX][y + 1].isSolid()) {
-                            if (rand.nextFloat() >= matrix[x][y].getInertia() && movementChance > 0) {
-                                CellularMatrix.swap(x, targetX, y, y + 1);
-                            }
-                            movementChance--;
-                            break;
-                        }
-                    }
-                }
+        if (!checkInsideBounds(matrix, x, y)) return;
+        if (canMoveTo(matrix, x, y + 1)) {
+            moveTo(x, y, x, y + 1);
+            this.setFreeFalling(true);
+            wakeUpNeighbors(matrix, x, y);
+            return;
+        }
+        if (rand.nextFloat() < this.getInertia()) {
+            this.setFreeFalling(false);
+            return;
+        }
+        if (!isFreeFalling()) return;
+        boolean checkRightFirst = rand.nextBoolean();
+        for (int i = 0; i < 2; i++) {
+            int dir = ((i == 0) == checkRightFirst) ? 1 : -1;
+            int targetX = x + dir;
+            int targetY = y + 1;
+            if (canMoveTo(matrix, targetX, targetY)) {
+                moveTo(x, y, targetX, targetY);
+                this.setFreeFalling(true);
+                wakeUpNeighbors(matrix, x, y);
+                return;
             }
         }
+        this.setFreeFalling(false);
     }
-    @Override
-    public boolean isSolid(){
-        return true;
+
+    private void wakeUpNeighbors(Cell[][] matrix, int x, int y) {
+        wakeUpNeighbor(matrix, x - 1, y);
+        wakeUpNeighbor(matrix, x + 1, y);
+    }
+
+    private void wakeUpNeighbor(Cell[][] matrix, int x, int y) {
+        if (checkInsideBounds(matrix, x, y)) {
+            matrix[x][y].setFreeFalling(true);
+        }
     }
 }
