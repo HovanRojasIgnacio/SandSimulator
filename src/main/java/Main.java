@@ -28,6 +28,8 @@ public class Main {
     double lastX = mouseX;
     double lastY = mouseY;
 
+    int brushSize = 1;
+
     public final static int WIDTH = 800;
     public final static int HEIGHT = 800;
 
@@ -77,8 +79,17 @@ public class Main {
             if ( key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE ) {
                 glfwSetWindowShouldClose(window, true); // We will detect this in the rendering loop
             }
-            if (action == GLFW_PRESS && key >= GLFW_KEY_0 && key <= GLFW_KEY_9) {
-                lastKeyPressed = key;
+            if (action == GLFW_PRESS){
+                if(key >= GLFW_KEY_0 && key <= GLFW_KEY_9){
+                    lastKeyPressed = key;
+                }
+                if(key == GLFW_KEY_KP_ADD){
+                    brushSize*=2;
+                    if(brushSize>4){
+                        brushSize=1;
+                    }
+                    System.out.println(brushSize);
+                }
             }
         });
         // Get the thread stack and push a new frame
@@ -150,8 +161,11 @@ public class Main {
                     double t = i / steps;
                     double currentX = lastX + (dx * t);
                     double currentY = lastY + (dy * t);
-                    System.out.println(lastKeyPressed);
-                    cellularMatrix.setCell(currentX, currentY, getPaintBrush());
+                    for(int j = 0;j<brushSize;j++){
+                        for(int k = 0; k<brushSize;k++){
+                            cellularMatrix.setCell(currentX+j*CellularMatrix.CELLSIZE, currentY+k*CellularMatrix.CELLSIZE, getPaintBrush());
+                        }
+                    }
                 }
             }
             lastX = mouseX;

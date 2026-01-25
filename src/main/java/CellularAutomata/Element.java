@@ -20,17 +20,6 @@ public abstract class Element implements Cell {
         return inertia;
     }
 
-    public void paint(double x, double y, int size) {
-        glColor3f(color.r, color.g, color.b);
-
-        glBegin(GL_QUADS);
-        glVertex2d(x, y);              // Bottom-Left
-        glVertex2d(x + size, y);       // Bottom-Right
-        glVertex2d(x + size, y + size);// Top-Right
-        glVertex2d(x, y + size);       // Top-Left
-        glEnd();
-    }
-
     public void step(Cell[][] matrix, int x, int y) {
         hasMoved = true;
         oneFrameStep(matrix,x,y);
@@ -98,4 +87,7 @@ public abstract class Element implements Cell {
         CellularMatrix.swap(x1, x2, y1, y2);
     }
 
+    public Color getColor() {
+        return color;
+    }
 }

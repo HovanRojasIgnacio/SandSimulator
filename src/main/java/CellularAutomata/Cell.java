@@ -1,9 +1,10 @@
 package CellularAutomata;
 
+import Util.Color;
+
 public interface Cell {
 
 
-    void paint(double drawX, double drawY, int cellsize);
 
     void step(Cell[][] matrix, int i, int j);
 
@@ -26,6 +27,8 @@ public interface Cell {
     boolean isFreeFalling();
 
     void setFreeFalling(boolean freeFalling);
+
+    Color getColor();
 
 }
 

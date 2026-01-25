@@ -19,12 +19,13 @@ public abstract class Liquid extends Element {
 
         if (canMoveTo(matrix, x, y + 1)) {
             moveTo(x, y, x, y + 1);
-            freeFalling = true;
+            setFreeFalling(true);
             return;
         }
         if (tryMoveDiagonally(matrix, x, y)) {
             return;
         }
+        setFreeFalling(false);
         flowHorizontally(matrix, x, y);
     }
 

@@ -5,7 +5,8 @@ import Util.Color;
 public class Air extends Gas {
 
     public Air(){
-        color = new Color(0,0,0);
+        float noise = rand.nextFloat() * 0.05f;
+        color = new Color(noise, noise, noise);
         density = 0;
     }
 
